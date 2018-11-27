@@ -3,8 +3,6 @@ PACKAGES = @babel/core@7.1 @babel/preset-env@7.1 @babel/cli@7.1 babel-loader@8.0
 
 WPARGS = --config=webpack.config.js
 WPCONFIG = "module.exports = { module: { rules: [ { test: /\.js$$/, loader: 'babel-loader', options: { presets: [ ['@babel/preset-env' , { targets: '> 0.25%, not dead' } ] ] } } ] } };"
-BABELRC = "{ \"presets\": [ [\"@babel/preset-env\" , {} ] ] }"
-BROWSERSLIST = "> 0.25%, not dead"
 
 SRC_DIRS = $(shell find src -type d)
 SRC_FILES = $(shell find src -type f -name '*')
@@ -35,15 +33,12 @@ out/prod/js/bundle.js out/prod-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/pa
 out/dev/js/bundle.js out/dev-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/package.json
 	$(CDBT); npx webpack ../src/index.js -o ../$@ --mode=development $(WPARGS)
 
-buildtools/package.json: buildtools/webpack.config.js buildtools/.browserslistrc | buildtools
+buildtools/package.json: buildtools/webpack.config.js | buildtools
 	@mkdir -p $(@D)
 	$(CDBT); npm init -y; npm install --save-dev $(PACKAGES)
 
 buildtools/webpack.config.js: | buildtools
 	@echo $(WPCONFIG) > buildtools/webpack.config.js
-
-buildtools/.browserslistrc: | buildtools
-	@echo $(BROWSERSLIST) > buildtools/.browserslistrc
 
 
 
