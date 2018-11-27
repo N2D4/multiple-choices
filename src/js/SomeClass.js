@@ -1,3 +1,3 @@
 export default {
-    say: msg => alert(msg)
+    say: msg => document.write(msg)
 };

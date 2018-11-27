@@ -23,7 +23,8 @@ clean-all: clean
 	rm -rf buildtools
 
 
-out/prod/% out/dev/%: src/% | out
+out/prod/% out/dev/%: src/%
+	@mkdir -p $(@D)
 	cp $< $@
 
 out/prod/js/bundle.js out/prod-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/package.json
@@ -32,11 +33,12 @@ out/prod/js/bundle.js out/prod-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/pa
 out/dev/js/bundle.js out/dev-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/package.json
 	$(CDBT); npx webpack ../src/index.js -o ../$@ --mode=development $(WPARGS)
 
-buildtools/package.json: buildtools/webpack.config.js | buildtools
-	$(CDBT); npm init -y; npm install --save-dev $(PACKAGES)
+buildtools/package.json: | buildtools/webpack.config.js
+	@mkdir -p $(@D)
+	@echo
+	@echo "************* Downloading Webpack and Babel *************"
+	$(CDBT); npm init -y > /dev/null; npm install --save-dev $(PACKAGES)
 
-buildtools/webpack.config.js: | buildtools
+buildtools/webpack.config.js:
+	@mkdir -p $(@D)
 	@echo $(WPCONFIG) > buildtools/webpack.config.js
-
-out buildtools:
-	@mkdir -p $@
