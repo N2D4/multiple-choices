@@ -23,8 +23,7 @@ clean-all: clean
 	rm -rf buildtools
 
 
-out/prod/% out/dev/%: src/%
-	@mkdir -p $(@D)
+out/prod/% out/dev/%: src/% | out
 	cp $< $@
 
 out/prod/js/bundle.js out/prod-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/package.json
@@ -34,7 +33,6 @@ out/dev/js/bundle.js out/dev-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/pack
 	$(CDBT); npx webpack ../src/index.js -o ../$@ --mode=development $(WPARGS)
 
 buildtools/package.json: buildtools/webpack.config.js | buildtools
-	@mkdir -p $(@D)
 	$(CDBT); npm init -y; npm install --save-dev $(PACKAGES)
 
 buildtools/webpack.config.js: | buildtools
