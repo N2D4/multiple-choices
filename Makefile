@@ -38,8 +38,5 @@ buildtools/package.json: buildtools/webpack.config.js | buildtools
 buildtools/webpack.config.js: | buildtools
 	@echo $(WPCONFIG) > buildtools/webpack.config.js
 
-
-
-
 out buildtools:
 	@mkdir -p $@
