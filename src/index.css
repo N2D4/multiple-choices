@@ -155,24 +155,23 @@ body {
     overflow: hidden;
 }
 
-#progresstransform {
-    position: relative;
-    left: 0;
-    -webkit-transition: left 0.1s;
-    transition: left 0.1s;
-    width: 100%;
+#progressbar > #progresstransform {
+    position: absolute;
+    width: 200%;
     height: 100%;
     margin: 0px;
     padding: 0px;
 }
 
 #progressbar > #progresstransform > .progressel {
-    width: 5%;
+    position: relative;
+    width: 0%;
     margin: 0px;
     float: left;
     height: 100%;
     padding: 0px;
     background-color: #00FF00;
+    transition: width 0.1s, margin-left 0.1s, margin-right 0.1s;
 }
 
 #pwrap {
