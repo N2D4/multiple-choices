@@ -21,6 +21,7 @@ export default class Random {
             this.b = state = (1664525 * state + 1013904223) % 4294967296;
             this.c = state = (1664525 * state + 1013904223) % 4294967296;
             this.d = state = (1664525 * state + 1013904223) % 4294967296;
+            if (this.d === 0) this.d = 1;
 
             for (let i = 0; i < 10; i++) {
                 this.next();
@@ -34,15 +35,15 @@ export default class Random {
     /**
      * Returns a pseudo-random integer between 0 (inclusive) and 2^32 (exclusive).
      * 
-     * Implementation by user bryc on StackOverflow: https://stackoverflow.com/a/47593316
+     * Original implementation by user bryc on StackOverflow: https://stackoverflow.com/a/47593316. Slightly modified.
      */
     next() {
-        const t = this.b << 9;
         let r = this.a * 5;
         r = (r << 7 | r >>> 25) * 9;
 
+        const t = this.b << 9;
         this.c ^= this.a; this.d ^= this.b;
-        this.b ^= this.c; this.a ^= this.d; this.c ^= this.t;
+        this.b ^= this.c; this.a ^= this.d; this.c ^= t;
         this.d = this.d << 11 | this.d >>> 21;
 
         return r >>> 0;
@@ -53,6 +54,10 @@ export default class Random {
      */
     nextFloat() {
         return this.next() / 4294967296;
+    }
+
+    chance(chance) {
+        return this.nextFloat() < chance;
     }
 
     /**
@@ -69,6 +74,30 @@ export default class Random {
         while (true) {
             const r = this.next();
             if (r + dif < 4294967296) return minInclusive + r % dif;
+        }
+    }
+
+    binomialInt(minInclusive, expectedValue, maxExclusive) {
+        const n = maxExclusive - minInclusive;
+        const exp = expectedValue - minInclusive;
+        const p = exp / n;
+
+        let k = 0;
+        for (let i = 0; i < n; i++) {
+            if (this.chance(p)) k++;
+        }
+
+        return minInclusive + k;
+    }
+
+
+    nextElement(array) {
+        return array[this.nextInt(array.length)];
+    }
+
+    shuffle(array) {
+        for (let i = 0; i < array.length - 1; i++) {
+            array[i] = array[this.nextInt(i + 1, array.length)];
         }
     }
 }

@@ -1,5 +1,6 @@
 CDBT = cd buildtools
-PACKAGES = @babel/core@7.1 @babel/preset-env@7.1 @babel/cli@7.1 babel-loader@8.0 webpack@4.26 webpack-cli@3.1
+DEVPACKAGES = @babel/core@7.1 @babel/preset-env@7.1 @babel/cli@7.1 babel-loader@8.0 webpack@4.26 webpack-cli@3.1
+PACKAGES = @babel/polyfill
 
 WPARGS = --config=webpack.config.js
 WPCONFIG = "module.exports = { module: { rules: [ { test: /\.js$$/, loader: 'babel-loader', options: { presets: [ ['@babel/preset-env' , { targets: '> 0.25%, not dead' } ] ] } } ] } };"
@@ -28,16 +29,16 @@ out/prod/% out/dev/%: src/%
 	cp $< $@
 
 out/prod/js/bundle.js out/prod-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/package.json
-	$(CDBT); npx webpack ../src/index.js -o ../$@ --mode=production $(WPARGS)
+	$(CDBT); npx webpack @babel/polyfill ../src/index.js -o ../$@ --mode=production $(WPARGS)
 
 out/dev/js/bundle.js out/dev-bundle.js: $(SRC_FILES) $(SRC_DIRS) buildtools/package.json
-	$(CDBT); npx webpack ../src/index.js -o ../$@ --mode=development $(WPARGS)
+	$(CDBT); npx webpack @babel/polyfill ../src/index.js -o ../$@ --mode=development $(WPARGS)
 
 buildtools/package.json: | buildtools/webpack.config.js
 	@mkdir -p $(@D)
 	@echo
 	@echo "************* Downloading Webpack and Babel *************"
-	$(CDBT); npm init -y > /dev/null; npm install --save-dev $(PACKAGES)
+	$(CDBT); npm init -y > /dev/null; npm install --save-dev $(DEVPACKAGES); npm install --save $(PACKAGES)
 
 buildtools/webpack.config.js:
 	@mkdir -p $(@D)

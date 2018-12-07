@@ -1,42 +1,52 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html id="html">
+<head id="head">
     <title>Multiple Choices</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <link rel="stylesheet" href="index.css">
     <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script defer src="js/bundle.js" fallback="index.js" fallback-type="module"></script>
 </script>
 </head>
-<body>
-    <div id="header" class="sideline">
+<body id="body">
+    <div id="header" class="noselect sideline">
         <div class="left"><a href="https://github.com/N2D4/multiple-choices" target="_blank">sauce</a></div>
         <div class="right">no affiliation. no liability. <a href="mailto:wohlwenk@student.ethz.ch">report an error</a></div>
         <br>
         <div class="sep"></div>
         <div id="progressarea">
-            <div style="flex: 1 0 0;"></div>
-                <div id="progressbar">
-                    <div id="progresstransform">
-                        <div class="progressel" style="width:4%;margin-left:6%;"></div>
-                        <div class="progressel" style="width:8%;margin-right:2%;"></div>
-                        <div class="progressel" style="width:10%;margin-left:0%;"></div>
-                        <div class="progressel" style="width:10%;margin-left:0%;"></div>
-                        <div class="progressel" style="width:0%;margin-left:10%;"></div>
-                        <div class="progressel" style="width:2%;margin-left:8%;"></div>
-                        <div class="progressel" style="width:0%;margin-left:10%;"></div>
-                        <div class="progressel" style="width:5%;margin-left:5%;"></div>
-                        <div class="progressel" style="width:10%;margin-left:0%;"></div>
-                        <div class="progressel" style="width:2%;margin-right:8%;"></div>
-                    </div>
+            <div id="progresswrap"></div>
+            <div id="progressbar">
+                <div id="progresstransform">
+                    <div class="progressel" style="width:4%;margin-left:6%;"></div>
+                    <div class="progressel" style="width:8%;margin-right:2%;"></div>
+                    <div class="progressel" style="width:10%;margin-left:0%;"></div>
+                    <div class="progressel" style="width:10%;margin-left:0%;"></div>
+                    <div class="progressel" style="width:0%;margin-left:10%;"></div>
+                    <div class="progressel" style="width:2%;margin-left:8%;"></div>
+                    <div class="progressel" style="width:0%;margin-left:10%;"></div>
+                    <div class="progressel" style="width:5%;margin-left:5%;"></div>
+                    <div class="progressel" style="width:10%;margin-left:0%;"></div>
+                    <div class="progressel" style="width:2%;margin-right:8%;"></div>
                 </div>
+            </div>
             <div id="pwrap">
-                <div id="progresspercentage">69%</div>
+                <div id="progresspercentage">0%</div>
             </div>
         </div>
     </div>
 
     <div id="container">
-        <div id="question">Some math \(x\), some more math \[x = 17\]</div>
+        <noscript>You seem to have JavaScript disabled. Please enable JavaScript, then try again</noscript>
+        <div id="question">
+            If the page doesn't load, make sure you've enabled JavaScript and you've updated your browser.<br>
+            If it still doesn't load, please report an error<br>
+            Some math \(x\), some more math \[x = 17\]
+        </div>
+        <div id="method">
+            Nothing here yet \(x^2 = a_3\)
+        </div>
         <ol class="noselect" id="answers">
             <label class="correct"><li><input type="checkbox"><a>Correct answer</a><div class="explanation">Example explanation</div></li></label>
             <label class="incorrect"><li><input type="checkbox"><a>Incorrect answer</a><div class="explanation">Other example explanation</div></li></label>

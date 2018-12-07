@@ -1,69 +1,89 @@
 import Random from './js/Random.js';
+import QuestionSet, {SetName, SetIdentifier} from './js/sets/DiscreteMathematics.js';
 
 // Game constants
 const numberOfQuestionsInScore = 20;
+const currentSet = QuestionSet;
+const dataPrefix = "multiplechoices_v1___" + SetIdentifier + "___";
 
 
 // Initialize local storage
-const data_state = "multiplechoices_dmv1_state";
-const data_scores = "multiplechoices_dmv1_scores";
-const data_total_answered = "multiplechoices_dmv1_total_answered";
-setStoredItemIfNotPresent(data_state, (Math.random() * 4294967296) >>> 0);
+const allDataKinds = new Set();
+const storageFallback = new Map();
+const data_init_state = "init_state";
+const data_state = "state";
+const data_scores = "scores";
+const data_total_answered = "total_answered";
+const data_darkmode = "darkmode";
+setStoredItemIfNotPresent(data_init_state, (Math.random() * 4294967296) >>> 0);
+setStoredItemIfNotPresent(data_state, getStoredItem(data_init_state));
 setStoredItemIfNotPresent(data_scores, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 setStoredItemIfNotPresent(data_total_answered, {});
+setStoredItemIfNotPresent("darkmode", matchMedia("(prefers-color-scheme: dark)").matches);
 
 // Initialize Random instance
-const random = new Random(localStorage.getItem(data_state));
-
-// Sample exercise
-const exercise = {
-    question: `Is the following equation true? \\[5 = 2 + 3\\]`,
-    answerType: 'radio',
-    answers: [
-        {
-            caption: `Yes`,
-            tip: `you bad if you didn't know this`,
-            correct: true,
-            score: 10,
-        },
-        {
-            caption: `No`,
-            tip: `you even worse if you didn't know this`,
-        },
-        '---',
-        {
-            caption: `Maybe`,
-            tip: `why would you even select this one`,
-            score: 5
-        },
-    ],
-};
+const random = new Random(getStoredItem(data_state));
 
 
 
 main();
 async function main() {
+    setContent(document.getElementsByTagName("title")[0], SetName + " - Multiple Choices");
+
     const progresstransform = getElement("progresstransform");
     progresstransform.innerHTML = "";
-
     updateProgressBar();
 
+    updateDarkMode();
+    getElement("progressbar").addEventListener('click', toggleDarkMode);
+
+    setTimeout(() => {
+        MathJax.Hub.Typeset();
+    }, 3000);
+
+    document.addEventListener("keypress", function(event) {
+        if (event.keyCode === 13) {
+          getElement("done").click();
+          event.preventDefault();
+        }
+      });
+
+    const curSetEntries = Object.entries(currentSet);
     while (true) {
-        await showExercise('sample', exercise);
+        const nextExercise = random.nextElement(curSetEntries);
+        await showExercise(nextExercise[0], nextExercise[1](random));
     }
 }
 
 
 
+function toggleDarkMode() {
+    setStoredItem(data_darkmode, !getStoredItem(data_darkmode));
+    updateDarkMode();
+}
+
+function updateDarkMode() {
+    const html = getElement("html");
+    if (getStoredItem("darkmode")) {
+        console.log("ew darkmode");
+        html.classList.add("darkmode");
+    } else {
+        html.classList.remove("darkmode");
+    }
+}
+
+
 
 async function showExercise(exerciseid, exercise) {
     setContent("question", exercise.question);
-    const isRadio = exercise.answerType === 'radio';
+    setContent("method", ``);
 
     // Display answers
     let separatorCount = 0;
     removeCheckboxElements();
     for (const answer of exercise.answers) {
+        const answerType = answer.answerType || exercise.answerType;
+        const isRadio = answerType === 'radio';
         if (answer === '---') {
             createSeparator();
             separatorCount++;
@@ -75,6 +95,8 @@ async function showExercise(exerciseid, exercise) {
 
     await ask();
 
+
+    setContent("method", exercise.method || ``);
 
     // Evaluate answers
     let score = 0;
@@ -123,9 +145,29 @@ function registerScore(exerciseid, percentile) {
     setStoredItem(data_scores, scores);
 
     const totalAnswered = getStoredItem(data_total_answered);
-    totalAnswered[exerciseid] = (totalAnswered[exerciseid] || 0) + 1;
+    const tolan = [...(totalAnswered[exerciseid] || [0, 0])];
+    tolan[0] = tolan[0] + 100;
+    tolan[1] = tolan[1] + percentile;
+    totalAnswered[exerciseid] = tolan;
     setStoredItem(data_total_answered, totalAnswered);
 
+    try {
+        const req = new XMLHttpRequest();
+        req.open('POST', 'submitscore.php');
+        req.setRequestHeader('Content-type', 'application/json');
+        req.onreadystatechange = () => {
+            if (req.readyState == 4 && req.status == 200) {
+                if (req.responseText === "") return;
+                if (req.responseText.startsWith("<?php")) return;     // in case our web server doesn't support PHP
+                createElement("head", 'script', req.responseText);
+            }
+        }
+        req.send(JSON.stringify(getAllStoredItems()));
+    } catch (e) {
+        // no internet connection, but that's fine
+    }
+
+    // Update progress bar
     const progresstransform = getElement("progresstransform");
     while (progresstransform.children[0].style.width === "") {
         progresstransform.removeChild(progresstransform.children[0]);
@@ -178,15 +220,30 @@ function nonDeadChildren(element) {
 
 
 
+function getAllStoredItems() {
+    const result = {};
+    for (const name of allDataKinds) {
+        result[name] = getStoredItem(name);
+    }
+    return result;
+}
 
 function getStoredItem(name) {
-    const g = localStorage.getItem(name);
-    if (g === null) return undefined;
+    allDataKinds.add(name);
+    let g = null;
+    try {
+        g = localStorage.getItem(dataPrefix + name);
+    } catch (e) {}
+    if (g === null) return storageFallback.get(name);
     return JSON.parse(g);
 }
 
 function setStoredItem(name, value) {
-    localStorage.setItem(name, JSON.stringify(value));
+    allDataKinds.add(name);
+    try {
+        localStorage.setItem(dataPrefix + name, JSON.stringify(value));
+    } catch (e) {}
+    storageFallback.set(name, value);
 }
 
 function setStoredItemIfNotPresent(name, value) {
