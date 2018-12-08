@@ -73,6 +73,7 @@ export class Formula {
      * I wrote this at 3am so don't blame me
      */
     simplify(dnf = true) {
+        // TODO Simplify formulas like (A | B | C) & (A | B | ~C) to (A | B) (useful when simplifying C/DNF from truth table)
         let newf;
         switch (this.type) {
             case "atomic":
