@@ -1,5 +1,8 @@
 import Random from './js/Random.js';
 import QuestionSet, {SetName, SetIdentifier} from './js/sets/DiscreteMathematics.js';
+import runTests from './js/runTests.js';
+
+window.runTests = runTests;
 
 // Game constants
 const numberOfQuestionsInScore = 20;
@@ -65,7 +68,7 @@ function toggleDarkMode() {
 function updateDarkMode() {
     const html = getElement("html");
     if (getStoredItem("darkmode")) {
-        console.log("ew darkmode");
+        console.log("ewwwww, darkmode");
         html.classList.add("darkmode");
     } else {
         html.classList.remove("darkmode");

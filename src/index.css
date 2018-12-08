@@ -37,6 +37,10 @@ body {
     overflow-x: auto;
 }
 
+#method {
+    overflow-x: auto;
+}
+
 #answers {
     list-style-type: lower-alpha;
     padding: 0px;

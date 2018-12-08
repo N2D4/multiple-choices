@@ -23,9 +23,8 @@ export function deepEquals(a, b) {
 
     const aKeys = Object.keys(a);
     const bKeys = Object.keys(b);
-    if (aKeys.length !== bKeys.length) return false;
 
-    for (const key of aKeys) {
+    for (const key of [...aKeys, ...bKeys]) {
         if (!deepEquals(a[key], b[key])) return false;
     }
 

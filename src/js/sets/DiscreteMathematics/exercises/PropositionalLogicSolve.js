@@ -64,6 +64,13 @@ export default (random) => {
     }
 
 
+    let simplifiedFormula = formula;
+    const simplifySteps = [];
+    while (simplifiedFormula !== undefined) {
+        simplifySteps.push(simplifiedFormula);
+        simplifiedFormula = simplifiedFormula.simplify();
+    }
+    simplifiedFormula = simplifySteps[simplifySteps.length - 1];
 
 
 
@@ -72,20 +79,28 @@ export default (random) => {
         question: `
                     Consider the following ${showTruthTable ? `truth table` : `formula`} and interpretation${interpretations.length > 1 ? 's' : ''} in propositional logic:<br>
                     \\[
-                        \\begin{gather}
-                            ${showTruthTable ? formula.getTruthTable(`F`)
-                                             : `F \\equiv ${formula}`
-                            }
-                            \\\\
-                            \\begin{aligned}
-                                ${interpretations.map((a, i) => `\\mathcal{A}_{${i + 1}} &= ${renderInterpretation(a)}`).join(` \\\\ \n`)}
-                            \\end{aligned}
-                        \\end{gather}
-                    \\]<br>
+                        ${showTruthTable ? formula.getTruthTable(`F`)
+                                            : `F \\equiv ${formula}`
+                        }
+                    \\]
+                    \\[
+                        \\begin{aligned}
+                            ${interpretations.map((a, i) => `\\mathcal{A}_{${i + 1}} &= ${renderInterpretation(a)}`).join(` \\\\ \n`)}
+                        \\end{aligned}
+                    \\]
                     Which of the following statements apply?
                   `,
         method: showTruthTable ? ``
-                               : `\\[${formula.getTruthTable(`F`)}\\]`,
+                               : `
+                                    \\[
+                                        \\begin{aligned}
+                                            F &\\equiv ${simplifySteps.join(` \\\\ \n &\\equiv `)}
+                                        \\end{aligned}
+                                    \\]
+                                    \\[
+                                        ${formula.getTruthTable(`F`)}
+                                    \\]
+                                  `,
         answerType: 'checkbox',
         answers: [...interpretationAnswers],
     });
