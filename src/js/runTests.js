@@ -30,19 +30,59 @@ export default function runTests(scale = 1) {
         }
     }
 
+    const startOfAllTests = performance.now();
 
 
 
+
+    // TODO check if simplified formula is actually in CNF/DNF
     runTest(function propositionalSimplify(prog) {
-        const atomicCount = Math.round(2 + 6 * prog);
+        const atomicCount = Math.round(1 + 6 * prog);
+        const atomics = [...range(atomicCount)].map(i => String.fromCharCode(['A'.charCodeAt(0) + i]));
+
+        const isDNF = random.chance(1/2);
+        const formula = new PropositionalFormula(random, atomics);
+        let last = undefined;
+        let simplified = formula;
+        while (simplified !== undefined) {
+            assert(simplified.isEquivalent(formula), "formula:", formula, "last:", last, "simplified:", simplified);
+            last = simplified;
+            simplified = simplified.simplify(isDNF);
+        }
+    }, 1000);
+
+
+    runTest(function propositionalTruthTables(prog) {
+        const atomicCount = Math.round(1 + 3 * prog * prog);
         const atomics = [...range(atomicCount)].map(i => String.fromCharCode(['A'.charCodeAt(0) + i]));
 
         const formula = new PropositionalFormula(random, atomics);
-        let simplified = formula;
-        while (simplified !== undefined) {
-            assert(simplified.isEquivalent(formula), "formula:", formula, "simplified:", simplified);
-            simplified = simplified.simplify();
-        }
-    }, 1000);
+        const freeVariables = formula.freeVariables();
+        const atomicsTable = formula.getTruthTable(atomics);
+        const table = formula.getTruthTable();
+
+        let newf = PropositionalFormula.fromTruthTable(atomicsTable, atomics, false);
+        assert(newf.isEquivalent(formula), formula, "CNF:", newf, "table:", table);
+
+        newf = PropositionalFormula.fromTruthTable(table, freeVariables, false);
+        assert(newf.isEquivalent(formula), formula, "CNF:", newf, "table:", table, "only free variables");
+
+        newf = PropositionalFormula.fromTruthTable(atomicsTable, atomics, true);
+        assert(newf.isEquivalent(formula), formula, "DNF:", newf, "table:", table);
+
+        newf = PropositionalFormula.fromTruthTable(table, freeVariables, true);
+        assert(newf.isEquivalent(formula), formula, "DNF:", newf, "table:", table, "only free variables");
+
+
+    }, 500);
+
+
+
+
+
     
+
+
+    const endOfAllTests = performance.now();
+    console.log("Successfully ran all tests! (" + (endOfAllTests - startOfAllTests) / 1000 + "s)");
 }

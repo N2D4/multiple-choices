@@ -44,6 +44,7 @@ body {
 #answers {
     list-style-type: lower-alpha;
     padding: 0px;
+    margin-top: 30px;
 }
 
 #answers > label > li {

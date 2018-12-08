@@ -27,8 +27,6 @@ setStoredItemIfNotPresent("darkmode", matchMedia("(prefers-color-scheme: dark)")
 // Initialize Random instance
 const random = new Random(getStoredItem(data_state));
 
-
-
 main();
 async function main() {
     setContent(document.getElementsByTagName("title")[0], SetName + " - Multiple Choices");

@@ -97,7 +97,8 @@ export default class Random {
 
     shuffle(array) {
         for (let i = 0; i < array.length - 1; i++) {
-            array[i] = array[this.nextInt(i + 1, array.length)];
+            const j = this.nextInt(i + 1, array.length);
+            [array[i], array[j]] = [array[j], array[i]];
         }
     }
 }

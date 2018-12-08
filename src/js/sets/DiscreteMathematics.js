@@ -6,6 +6,6 @@ export let SetName = "Discrete Mathematics";
 export let SetIdentifier = "discmath18";
 
 export default {
-    ModularEquivalence,
+    //ModularEquivalence,
     PropositionalLogicSolve,
 };

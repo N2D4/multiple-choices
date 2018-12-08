@@ -4,11 +4,12 @@ import { Formula } from '../logic/PropositionalLogic.js';
 
 export default (random) => {
 
-    const atomicCount = random.binomialInt(2, 3, 5);
+    const atomicCount = random.binomialInt(2, 2.7, 4);
     const atomics = [...range(atomicCount)].map(i => String.fromCharCode(['A'.charCodeAt(0) + i]));
 
     const formula = new Formula(random, atomics);
-    const freeVariableCount = formula.freeVariables().length;
+    const freeVariables = formula.freeVariables();
+    const freeVariableCount = freeVariables.length;
     const showTruthTable = freeVariableCount >= 2 && freeVariableCount <= 4 && random.chance(1/3);
 
 
@@ -52,26 +53,44 @@ export default (random) => {
             tip: `An interpretation is suitable for a formula if and only if it contains all its freely occuring variables (and possibly more).`,
             correct: isSuitable,
             appearChance: showTruthTable ? 0 : 1/2,
-            score: 1,
+            score: 0.5,
         });
         interpretationAnswers.push({
             caption: `\\(\\mathcal{A}_{${i + 1}}\\) is a model for \\(F\\)`,
             tip: `An interpretation is a model for a formula if and only if it is suitable and the corresponding entry in the truth table evaluates to 1.${noModelReason}`,
             correct: isSuitable && isModel,
-            score: isSuitable ? 2 : 1,
+            score: isSuitable ? 1 : 0.5,
         });
         interpretationAnswers.push('---');
     }
 
 
-    let simplifiedFormula = formula;
+    let simplifiedFormulaDNF = formula;
     const simplifySteps = [];
-    while (simplifiedFormula !== undefined) {
-        simplifySteps.push(simplifiedFormula);
-        simplifiedFormula = simplifiedFormula.simplify();
+    while (simplifiedFormulaDNF !== undefined) {
+        simplifySteps.push(simplifiedFormulaDNF);
+        simplifiedFormulaDNF = simplifiedFormulaDNF.simplify(true);
     }
-    simplifiedFormula = simplifySteps[simplifySteps.length - 1];
+    simplifiedFormulaDNF = simplifySteps[simplifySteps.length - 1];
 
+    const simplifiedFormulaCNF = simplifiedFormulaDNF.simplifyFull(false);
+
+
+
+
+    const similarFormulas = [
+        simplifiedFormulaDNF,
+        simplifiedFormulaCNF,
+        formula.getSlightlyModified(random),
+        formula.getSlightlyModified(random),
+        formula.getSlightlyModified(random),
+        formula.getSlightlyModified(random),
+        formula.getSlightlyModified(random),
+        formula.getSlightlyModified(random),
+    ];
+    removeDeepDuplicates(similarFormulas);
+
+    random.shuffle(similarFormulas);
 
 
 
@@ -79,7 +98,7 @@ export default (random) => {
         question: `
                     Consider the following ${showTruthTable ? `truth table` : `formula`} and interpretation${interpretations.length > 1 ? 's' : ''} in propositional logic:<br>
                     \\[
-                        ${showTruthTable ? formula.getTruthTable(`F`)
+                        ${showTruthTable ? formula.renderTruthTable(`F`)
                                             : `F \\equiv ${formula}`
                         }
                     \\]
@@ -96,12 +115,96 @@ export default (random) => {
                                         \\begin{aligned}
                                             F &\\equiv ${simplifySteps.join(` \\\\ \n &\\equiv `)}
                                         \\end{aligned}
-                                    \\]
+                                    \\]<br>
                                     \\[
-                                        ${formula.getTruthTable(`F`)}
+                                        ${formula.renderTruthTable(`F`)}
                                     \\]
                                   `,
         answerType: 'checkbox',
-        answers: [...interpretationAnswers],
+        answers: [
+            ...interpretationAnswers,
+            '---',
+            {
+                caption: `\\(F\\) is unsatisfiable`,
+                tip: `A formula is satisfiable if and only if no single truth table entry is 1.`,
+                correct: formula.isUnsatisfiable(),
+                appearChance: 2/3,
+                score: 1,
+            },
+            {
+                caption: `\\(F\\) is satisfiable`,
+                tip: `A formula is satisfiable if and only if at least one truth table entry is 1.`,
+                correct: formula.isSatisfiable(),
+                appearChance: 2/3,
+                score: 1,
+            },
+            {
+                caption: `\\(F\\) is ${random.chance(1/2) ? `a tautology` : `valid`}`,
+                tip: `A formula is a tautology/valid if and only if every truth table entry is 1.`,
+                correct: formula.isTautology(),
+                appearChance: 2/3,
+                score: 1,
+            },
+            '---',
+            {
+                caption: `\\(F \\equiv F \\land (Y \\lor \\neg Y)\\) for all formulas \\(Y\\)`,
+                tip: `A formula is equivalent to another formula if and only if they evaluate to the same value for any interpretation. Which variables are free does not matter.`,
+                correct: true,
+                appearChance: 1/3,
+                score: 0.5,
+            },
+            ...similarFormulas.map(similar => ({
+                caption: `\\(F \\equiv ${similar}\\)`,
+                tip: `A formula is equivalent to another formula if and only if they evaluate to the same value for any interpretation.`,
+                correct: formula.isEquivalent(similar),
+                appearChance: 1/similarFormulas.length,
+                score: 1,
+            })),
+            '---',
+            {
+                caption: `\\(F \\vDash F \\land Y\\) for all formulas \\(Y\\)`,
+                tip: `Any conjunction (but not necessarily disjunction!) is a logical consequence of its operands.`,
+                correct: true,
+                appearChance: 1/6,
+                score: 0.25,
+            },
+            {
+                caption: `\\(F \\vDash ${Formula.tautology()}\\)`,
+                tip: `Any tautology is a logical consequence of every formula.`,
+                correct: true,
+                appearChance: 1/4,
+                score: 0.5,
+            },
+            ...similarFormulas.map(similar => ({
+                caption: `\\(F \\vDash ${similar}\\)`,
+                tip: `A formula is a logical consequence of another if and only if it evaluates to true for any interpretation for which the other formula evaluates to true. No requirement for the right-hand side is given if the left-hand side evaluates to false for a given interpretation.`,
+                correct: formula.implies(similar),
+                appearChance: 1/similarFormulas.length,
+                score: 1,
+            })),
+            '---',
+            {
+                caption: `\\(F \\lor Y \\vDash F\\) for all formulas \\(Y\\)`,
+                tip: `Any operand of a disjunction (but not necessarily conjunction!) is a logical consequence of the entire disjunction.`,
+                correct: true,
+                appearChance: 1/6,
+                score: 0.25,
+            },
+            {
+                caption: `\\(${Formula.unsatisfiable()} \\vDash F\\)`,
+                tip: `Any formula is a logical consequence of every unsatisfiable formula.`,
+                correct: true,
+                appearChance: 1/4,
+                score: 0.5,
+            },
+            ...similarFormulas.map(similar => ({
+                caption: `\\(${similar} \\vDash F\\)`,
+                tip: `A formula is a logical consequence of another if and only if it evaluates to true for any interpretation for which the other formula evaluates to true. No requirement for the right-hand side is given if the left-hand side evaluates to false for a given interpretation.`,
+                correct: similar.implies(formula),
+                appearChance: 1/similarFormulas.length,
+                score: 1,
+            })),
+            '---',
+        ],
     });
 };

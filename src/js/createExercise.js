@@ -8,7 +8,7 @@ export default function createExercise(random, exercise) {
             if (lastAnswer === '---') newAnswers.push(lastAnswer);
             newAnswers.push(answer);
         }
-        lastAnswer = answer;
+        lastAnswer = lastAnswer === undefined && answer === '---' ? undefined : answer;
     }
 
     exercise.answers = newAnswers;
