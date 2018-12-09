@@ -71,6 +71,7 @@ export default class Random {
         }
 
         const dif = maxExclusive - minInclusive;
+        if (dif <= 0) return minInclusive;
         while (true) {
             const r = this.next();
             if (r + dif < 4294967296) return minInclusive + r % dif;

@@ -52,7 +52,11 @@ async function main() {
     const curSetEntries = Object.entries(currentSet);
     while (true) {
         const nextExercise = random.nextElement(curSetEntries);
-        await showExercise(nextExercise[0], nextExercise[1](random));
+        let nE;
+        do {
+            nE = nextExercise[1](random);
+        } while (nE.answers.length <= 0);
+        await showExercise(nextExercise[0], nE);
     }
 }
 

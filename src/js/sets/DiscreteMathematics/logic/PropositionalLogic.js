@@ -26,17 +26,17 @@ export class Formula {
                 switch (random.nextInt(4)) {
                     case 0:
                         this.type = "neg";
-                        this.child = new Formula(random, atomics, depth + 0.25);
+                        this.child = new Formula(random, atomics, depth + 0.25, depthCap);
                         break;
                     case 1:
                         this.type = random.chance(3/4) ? "imply" : "imply2";
-                        this.left = new Formula(random, atomics, depth + 1.5);
-                        this.right = new Formula(random, atomics, depth + 1.5);
+                        this.left = new Formula(random, atomics, depth + 1.5, depthCap);
+                        this.right = new Formula(random, atomics, depth + 1.5, depthCap);
                         break;
                     case 2: case 3:
                         this.type = random.chance(1/2) ? "and" : "or";
                         const num = random.chance(1/16) ? 0 : random.binomialInt(2, 2.3, Math.max(atomics.length, 3));
-                        this.children = createArray(num).map(a => new Formula(random, atomics, depth + 1));
+                        this.children = createArray(num).map(a => new Formula(random, atomics, depth + 1, depthCap));
                         break;
                 }
             }
@@ -301,7 +301,7 @@ export class Formula {
                 } else {
                     return new Formula("or", {children: [
                         new Formula("and", {children: [new Formula("neg", {child: this.left}), new Formula("neg", {child: this.right})]}),
-                        new Formula("and", {children: [this.right, this.left]}),
+                        new Formula("and", {children: [this.left, this.right]}),
                     ]});
                 }
         }
