@@ -8,6 +8,6 @@ export let SetIdentifier = "discmath18";
 
 export default {
     //ModularEquivalence,
-    //PropositionalLogicSolve,
+    PropositionalLogicSolve,
     SetsSolve,
 };
