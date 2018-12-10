@@ -108,7 +108,7 @@ export default (random) => {
             })),
             ...spreadNumbers(cross.size(), Ssize + Tsize).filter(n => n > 0).map((n, _, arr) => ({
                 caption: `\\(|S \\times T| = ${n}\\)`,
-                tip: `The cardinality of a set is the number of elements it contains, not counting duplicates. If one of the elements is another set, which then again contains elements, this does not matter; the entire inner set contacountsins only as one element.`,
+                tip: `The cardinality of two set's cross product is the cardinality of the two sets multiplied.`,
                 correct: cross.size() === n,
                 appearChance: 1/arr.length,
                 score: 1,
