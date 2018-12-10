@@ -57,7 +57,6 @@ export default (random) => {
                 caption: `\\(|S| = ${n}\\)`,
                 tip: `The cardinality of a set is the number of elements it contains, not counting duplicates. If one of the elements is another set, which then again contains elements, this does not matter; the entire inner set counts only as one element.`,
                 correct: Ssize === n,
-                answerType: 'radio',
                 appearChance: Ssize === n ? 1 : 3/(arr.length - 1),
                 score: Ssize === n ? 2 : 0,
             })),
