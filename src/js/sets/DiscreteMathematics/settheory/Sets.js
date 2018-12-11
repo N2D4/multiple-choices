@@ -146,7 +146,6 @@ export class FiniteSet extends MSet {
         const res = [];
         sizeMax = Math.min(sizeMax, this.size());
         const size = random.nextInt(sizeMax + 1);
-        console.log(this, random, sizeMax);
         for (let i = 0; i < size; i++) {
             res.push(random.nextElement(this.elements));
         }

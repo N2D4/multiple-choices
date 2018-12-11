@@ -34,7 +34,6 @@ export default (random) => {
 
     const spreadNumbers = (...nums) => spreadNumbersR(random, ...nums);
 
-    console.log("ok");
     return createExercise(random, {
         question: `
                     Consider the following sets:
@@ -53,10 +52,11 @@ export default (random) => {
                 `,
         answerType: 'checkbox',
         answers: [
-            ...spreadNumbers(S.size, S.atomicCount(false), S.atomicCount(true)).filter(n => n > 0).map((n, _, arr) => ({
+            ...spreadNumbers(Ssize, S.atomicCount(false), S.atomicCount(true)).filter(n => n > 0).map((n, _, arr) => ({
                 caption: `\\(|S| = ${n}\\)`,
                 tip: `The cardinality of a set is the number of elements it contains, not counting duplicates. If one of the elements is another set, which then again contains elements, this does not matter; the entire inner set counts only as one element.`,
                 correct: Ssize === n,
+                answerType: 'radio',
                 appearChance: Ssize === n ? 1 : 3/(arr.length - 1),
                 score: Ssize === n ? 2 : 0,
             })),
