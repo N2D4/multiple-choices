@@ -101,5 +101,6 @@ export default class Random {
             const j = this.nextInt(i + 1, array.length);
             [array[i], array[j]] = [array[j], array[i]];
         }
+        return array;
     }
 }

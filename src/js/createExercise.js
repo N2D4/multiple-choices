@@ -14,3 +14,18 @@ export default function createExercise(random, exercise) {
     exercise.answers = newAnswers;
     return exercise;
 }
+
+
+export function createProofExercise(random, proof) {
+    return createExercise(random, {
+        question: proof.question,
+        method: proof.method,
+        answerType: 'radio',
+        answers: proof.proof.map(parray => random.shuffle(parray.map((p, i) => ({
+                                                                    caption: p,
+                                                                    correct: i === 0,
+                                                                    score: i === 0 ? 1 : 0,
+                                                                }))))
+                            .reduce((a, p) => [...a, '---', ...p], [])
+    });
+}

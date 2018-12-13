@@ -73,19 +73,19 @@ body {
     border-color: red;
 }
 
-#answers > label.correct > li {
+#answers > label.correct:not(.silent) > li {
     background: linear-gradient(to right, rgba(0, 220, 0, 1), rgba(0, 220, 0, 0));
 }
 
-.darkmode #answers > label.correct > li {
+.darkmode #answers > label.correct:not(.silent) > li {
     background: linear-gradient(to right, rgba(0, 180, 0, 1), rgba(0, 180, 0, 0));
 }
 
-#answers > label.incorrect > li {
+#answers > label.incorrect:not(.silent) > li {
     background: linear-gradient(to right, rgba(220, 0, 0, 1), rgba(220, 0, 0, 0));
 }
 
-.darkmode #answers > label.incorrect > li {
+.darkmode #answers > label.incorrect:not(.silent) > li {
     background: linear-gradient(to right, rgba(180, 0, 0, 1), rgba(180, 0, 0, 0));
 }
 

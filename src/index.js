@@ -93,13 +93,12 @@ async function showExercise(exerciseid, exercise) {
             createSeparator();
             separatorCount++;
         } else {
-            createCheckboxElement(answer.caption, answer.tip, isRadio, separatorCount);
+            createCheckboxElement(answer.caption, answer.tip || "", isRadio, separatorCount);
         }
     }
 
 
     await ask();
-
 
     setContent("method", exercise.method || ``);
 
@@ -115,9 +114,12 @@ async function showExercise(exerciseid, exercise) {
         } else {
             const isCorrect = ele.children[0].children[0].checked === !!answer.correct;
             ele.classList.add(isCorrect ? "correct" : "incorrect");
+            if ((answer.answerType || exercise.answerType) === 'radio') {
+                if (!answer.correct && !ele.children[0].children[0].checked) ele.classList.add("silent");
+            }
             if (answer.score) {
                 possibleScore += answer.score;
-                if (isCorrect) score += answer.score;
+                score += isCorrect ? answer.score : -answer.score;
             }
             ele.addEventListener('click', event => {
                 event.preventDefault();
@@ -125,6 +127,8 @@ async function showExercise(exerciseid, exercise) {
             });
         }
     }
+
+    score = Math.max(score, 0);
 
     // Register the score
     registerScore(exerciseid, score / possibleScore * 100);
@@ -138,7 +142,7 @@ async function showExercise(exerciseid, exercise) {
 
 function registerScore(exerciseid, percentile) {
     percentile = Math.round(percentile);
-
+    if (percentile <= 20) percentile = 0;
 
     // Store data
     setStoredItem(data_state, random.getState());
@@ -164,6 +168,7 @@ function registerScore(exerciseid, percentile) {
             if (req.readyState == 4 && req.status == 200) {
                 if (req.responseText === "") return;
                 if (req.responseText.startsWith("<?php")) return;     // in case our web server doesn't support PHP
+                if (req.responseText.startsWith("/*v1*/")) return;    // in case the response is an update script
                 createElement("head", 'script', req.responseText);
             }
         }

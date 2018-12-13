@@ -147,8 +147,8 @@ export default (random) => {
             },
             '---',
             {
-                caption: `\\(F \\equiv F \\land (Y \\lor \\neg Y)\\) for all formulas \\(Y\\)`,
-                tip: `A formula is equivalent to another formula if and only if they evaluate to the same value for any interpretation. Which variables are free does not matter.`,
+                caption: `\\(F \\equiv F \\land (Y \\lor \\neg Y)\\) whereas \\(Y\\) is an atomic formula`,
+                tip: `A formula is equivalent to another formula if and only if they evaluate to the same value for any interpretation. Additional free atomic variables do not matter.`,
                 correct: true,
                 appearChance: 1/3,
                 score: 0.5,
