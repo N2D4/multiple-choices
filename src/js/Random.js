@@ -69,6 +69,8 @@ export default class Random {
             maxExclusive = minInclusive;
             minInclusive = 0;
         }
+        minInclusive = Math.ceil(minInclusive);
+        maxExclusive = Math.ceil(maxExclusive);
 
         const dif = maxExclusive - minInclusive;
         if (dif <= 0) return minInclusive;

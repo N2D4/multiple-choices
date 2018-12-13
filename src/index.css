@@ -29,6 +29,11 @@ body {
     color: #F3F4F0;
 }
 
+span.remark {
+    font-style: italic;
+    font-size: 80%;
+}
+
 #container {
     padding: 5px 24px 5px 24px;
 }
@@ -45,6 +50,10 @@ body {
 #answers {
     list-style-type: lower-alpha;
     padding: 0px;
+}
+
+#answers > .additional {
+    padding: 10px;
 }
 
 #answers > label > li {
@@ -94,7 +103,7 @@ body {
     font-size: 80%;
 }
 
-#answers > label:not(.incorrect) > li > .explanation {
+#answers > label:not(.incorrect) > li > .explanation, #answers > label.noexplain > li > .explanation {
     display: none;
 }
 

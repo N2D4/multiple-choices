@@ -17,6 +17,16 @@ export function* range(min = 0, max) {
     }
 }
 
+export function* charRange(first = 'A', count) {
+    if (count === undefined) {
+        count = first;
+        first = 'A';
+    }
+    for (const i of range(count)) {
+        yield String.fromCharCode([first.charCodeAt(0) + i]);
+    }
+}
+
 export function deepEquals(a, b) {
     if (typeof a !== typeof b) return false;
     if (typeof a !== 'object') return a === b;
@@ -43,6 +53,7 @@ export function removeDeepDuplicates(arr) {
             }
         }
     }
+    return arr;
 }
 
 export function spreadNumbers(random, ...nums) {
@@ -53,7 +64,12 @@ export function spreadNumbers(random, ...nums) {
             arr.push(random.binomialInt(num - 3, num, num + 4));
         }
     }
-    arr.sort((a, b) => a - b);
     removeDeepDuplicates(arr);
+    arr.sort((a, b) => a - b);
     return arr;
 }
+
+export function spreadNumbersModulo(random, mod, ...nums) {
+    return removeDeepDuplicates(spreadNumbers(random, ...nums).map(a => ((a % mod) + mod) % mod)).sort((a, b) => a - b);
+}
+

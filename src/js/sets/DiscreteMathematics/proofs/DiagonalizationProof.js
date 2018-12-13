@@ -45,8 +45,8 @@ export default (random) => {
                 `We now repeat this for the first bit of \\(x\\) and the second bit of \\(z_2\\), and so on.`,
             ],
             [
-                `Our bitstring is now different than each of the bitstrings in \\(z\\), differing by at least one bit.`,
-                `Our bitstring is now different than each of the bitstrings in ${set}, differing by at least one bit.`,
+                `Our bitstring differs from each of the bitstrings in \\(z\\) by at least one bit.`,
+                `Our bitstring differs from each of the bitstrings in ${set} by at least one bit.`,
                 `We've now found a bitstring in \\(z\\) with a finite length.`,
             ],
             [

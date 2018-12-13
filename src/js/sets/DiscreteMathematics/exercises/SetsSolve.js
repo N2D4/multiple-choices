@@ -38,21 +38,25 @@ export default (random) => {
         question: `
                     Consider the following sets:
                     \\[
-                        S = ${S} \\\\
-                        T = ${T}
+                        \\begin{gathered}
+                            S = ${S} \\\\
+                            T = ${T}
+                        \\end{gathered}
                     \\]
                     Which of the following statements apply?<br>
-                    <i style="font-size: 80%;">Note: Here, we define numbers as atomic elements, and not as sets like in chapter 3.1.7.</i>
+                    <span class="remark">Note: Here, we define numbers as atomic elements, and not as sets like in chapter 3.1.7.</span>
                   `,
         method: `
                     \\[
-                        S \\cup T = ${union} \\\\
-                        S \\cap T = ${intersect}
+                        \\begin{gathered}
+                            S \\cup T = ${union} \\\\
+                            S \\cap T = ${intersect}
+                        \\end{gathered}
                     \\]
                 `,
         answerType: 'checkbox',
         answers: [
-            ...spreadNumbers(Ssize, S.atomicCount(false), S.atomicCount(true)).filter(n => n > 0).map((n, _, arr) => ({
+            ...spreadNumbers(Ssize, S.atomicCount(false), S.atomicCount(true)).filter(n => n >= 0).map((n, _, arr) => ({
                 caption: `\\(|S| = ${n}\\)`,
                 tip: `The cardinality of a set is the number of elements it contains, not counting duplicates. If one of the elements is another set, which then again contains elements, this does not matter; the entire inner set counts only as one element.`,
                 correct: Ssize === n,
@@ -91,21 +95,21 @@ export default (random) => {
                 score: 1,
             })),
             '---',
-            ...spreadNumbers(union.size(), Ssize + Tsize).filter(n => n > 0).map((n, _, arr) => ({
+            ...spreadNumbers(union.size(), Ssize + Tsize).filter(n => n >= 0).map((n, _, arr) => ({
                 caption: `\\(|S \\cup T| = ${n}\\)`,
                 tip: `The cardinality of a set is the number of elements it contains, not counting duplicates. If one of the elements is another set, which then again contains elements, this does not matter; the entire inner set counts only as one element.`,
                 correct: union.size() === n,
                 appearChance: 1/arr.length,
                 score: 1,
             })),
-            ...spreadNumbers(intersect.size(), Ssize + Tsize).filter(n => n > 0).map((n, _, arr) => ({
+            ...spreadNumbers(intersect.size(), Ssize + Tsize).filter(n => n >= 0).map((n, _, arr) => ({
                 caption: `\\(|S \\cap T| = ${n}\\)`,
                 tip: `The cardinality of a set is the number of elements it contains, not counting duplicates. If one of the elements is another set, which then again contains elements, this does not matter; the entire inner set counts only as one element.`,
                 correct: intersect.size() === n,
                 appearChance: 1/arr.length,
                 score: 1,
             })),
-            ...spreadNumbers(cross.size(), Ssize + Tsize).filter(n => n > 0).map((n, _, arr) => ({
+            ...spreadNumbers(cross.size(), Ssize + Tsize).filter(n => n >= 0).map((n, _, arr) => ({
                 caption: `\\(|S \\times T| = ${n}\\)`,
                 tip: `The cardinality of two set's cross product is the cardinality of the two sets multiplied.`,
                 correct: cross.size() === n,
@@ -113,7 +117,7 @@ export default (random) => {
                 score: 1,
             })),
             '---',
-            ...spreadNumbers(powerSet.size(), Math.pow(Ssize, 2)).filter(n => n > 0).map((n, _, arr) => ({
+            ...spreadNumbers(powerSet.size(), Math.pow(Ssize, 2)).filter(n => n >= 0).map((n, _, arr) => ({
                 caption: `\\(|\\mathcal{P}(S)| = ${n}\\)`,
                 tip: `The cardinality of a set's power set is always exactly two to the power of the set's cardinality. This number is equal to the number of subsets the set has.`,
                 correct: powerSet.size() === n,

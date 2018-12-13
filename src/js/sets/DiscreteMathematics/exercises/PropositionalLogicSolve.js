@@ -1,15 +1,15 @@
 import createExercise from '../../../createExercise.js';
-import { range, removeDeepDuplicates } from '../../../utils.js';
+import { charRange, removeDeepDuplicates } from '../../../utils.js';
 import { Formula } from '../logic/PropositionalLogic.js';
 
 export default (random) => {
 
-    const atomicCount = random.binomialInt(2, 2.7, 4);
-    const atomics = [...range(atomicCount)].map(i => String.fromCharCode(['A'.charCodeAt(0) + i]));
+    const atomicCount = random.binomialInt(2, 3, 5);
+    const atomics = [...charRange(atomicCount)];
 
     const formula = new Formula(random, atomics);
     const freeVariables = formula.freeVariables();
-    const freeVariableCount = freeVariables.length;
+    const freeVariableCount = freeVariables.size;
     const showTruthTable = freeVariableCount >= 2 && freeVariableCount <= 4 && random.chance(1/3);
 
 
@@ -93,6 +93,20 @@ export default (random) => {
     random.shuffle(similarFormulas);
 
 
+    const possibleCNFDNFFormulas = [];
+    while (possibleCNFDNFFormulas.length < 5) {
+        const form = new Formula(random, [...charRange('A', 6)]).simplifyFull(random.chance(1/2));
+        function contZeroL(form) {
+            switch (form.type) {
+                case "atomic": return false;
+                case "neg": return contZeroL(form.child);
+                case "and": case "or": return form.children.length <= 0 || form.children.some(a => contZeroL(a));
+                case "imply": case "imply2": return contZeroL(form.left) || contZeroL(form.right);
+            }
+        }
+        if (!contZeroL(form)) possibleCNFDNFFormulas.push(form);
+    }
+
 
     return createExercise(random, {
         question: `
@@ -115,7 +129,7 @@ export default (random) => {
                                         \\begin{aligned}
                                             F &\\equiv ${simplifySteps.join(` \\\\ \n &\\equiv `)}
                                         \\end{aligned}
-                                    \\]<br>
+                                    \\]
                                     \\[
                                         ${formula.renderTruthTable(`F`)}
                                     \\]
@@ -160,7 +174,6 @@ export default (random) => {
                 appearChance: 1/similarFormulas.length,
                 score: 1,
             })),
-            '---',
             {
                 caption: `\\(F \\vDash F \\land Y\\) for all formulas \\(Y\\)`,
                 tip: `Any conjunction (but not necessarily disjunction!) is a logical consequence of its operands.`,
@@ -182,7 +195,6 @@ export default (random) => {
                 appearChance: 1/similarFormulas.length,
                 score: 1,
             })),
-            '---',
             {
                 caption: `\\(F \\lor Y \\vDash F\\) for all formulas \\(Y\\)`,
                 tip: `Any operand of a disjunction (but not necessarily conjunction!) is a logical consequence of the entire disjunction.`,
@@ -205,6 +217,21 @@ export default (random) => {
                 score: 1,
             })),
             '---',
+            ...possibleCNFDNFFormulas.map(f => ({
+                caption: `\\(${f}\\) is in CNF`,
+                tip: `A formula is in conjunctive normal form if it is a conjunction of disjunctions of literals. Note that a single literal is also considered a disjunction of literals, and a single disjunction is also considered a conjunction of disjunctions.`,
+                correct: f.isCNF(),
+                appearChance: 1/possibleCNFDNFFormulas.length,
+                score: 1,
+            })),
+            ...possibleCNFDNFFormulas.map(f => ({
+                caption: `\\(${f}\\) is in DNF`,
+                tip: `A formula is in disjunctive normal form if it is a disjunction of conjunctions of literals. Note that a single literal is also considered a conjunctions of literals, and a single conjunction is also considered a disjunction of conjunction.`,
+                correct: f.isDNF(),
+                appearChance: 1/possibleCNFDNFFormulas.length,
+                score: 1,
+            })),
+            '---'
         ],
     });
 };

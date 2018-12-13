@@ -1,4 +1,4 @@
-import ModularEquivalence from './DiscreteMathematics/exercises/ModularEquivalence.js';
+import ModularArithmetic from './DiscreteMathematics/exercises/ModularArithmetic.js';
 import PropositionalLogicSolve from './DiscreteMathematics/exercises/PropositionalLogicSolve.js';
 import SetsSolve from './DiscreteMathematics/exercises/SetsSolve.js';
 import DiagonalizationProof from './DiscreteMathematics/proofs/DiagonalizationProof.js';
@@ -9,10 +9,9 @@ export let SetIdentifier = "discmath18";
 
 
 /* === TODO LIST ===
- * - Proofs
+ * - Proofs: ...
  *
  * - Proof systems
- * - CNF/DNF
  * - Calculi
  *
  * - Relations
@@ -35,4 +34,5 @@ export default [
     { DiagonalizationProof, weight: 0.1 },
     { PropositionalLogicSolve, weight: 1 },
     { SetsSolve, weight: 1 },
+    { ModularArithmetic, weight: 1 }
 ];

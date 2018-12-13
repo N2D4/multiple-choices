@@ -2,7 +2,7 @@ import Random from '../../../Random.js';
 import { createArray, range, removeDeepDuplicates, deepEquals } from '../../../utils.js';
 
 export class Formula {
-    constructor(random, atomics, depth = 0, depthCap = 4) {
+    constructor(random, atomics, depth = 0, depthCap = 5) {
         if (random instanceof Random && atomics.length <= 0) {
             random = random.chance(0.5) ? Formula.tautology() : Formula.unsatisfiable();
         }
@@ -92,6 +92,19 @@ export class Formula {
 
     isSatisfiable() {
         return !this.isUnsatisfiable();
+    }
+
+    isCNF() {
+        return this.isClause(false, 2);
+    }
+
+    isDNF() {
+        return this.isClause(true, 2);
+    }
+
+    isClause(dnf, depth = 1) {
+        if (depth <= 0) return this.isLiteral();
+        return this.isClause(!dnf, depth - 1) || ((this.type === (dnf ? "or" : "and")) && this.children.every(a => a.isClause(!dnf, depth - 1)));
     }
 
 

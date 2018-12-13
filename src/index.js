@@ -5,7 +5,7 @@ import runTests from './js/runTests.js';
 window.runTests = runTests;
 
 // Game constants
-const numberOfQuestionsInScore = 20;
+const numberOfQuestionsInScore = 15;
 const currentSet = QuestionSet;
 const dataPrefix = "multiplechoices_v1___" + SetIdentifier + "___";
 
@@ -27,6 +27,7 @@ setStoredItemIfNotPresent("darkmode", matchMedia("(prefers-color-scheme: dark)")
 // Initialize Random instance
 const random = new Random(getStoredItem(data_state));
 
+
 main();
 async function main() {
     setContent(document.getElementsByTagName("title")[0], SetName + " - Multiple Choices");
@@ -37,10 +38,6 @@ async function main() {
 
     updateDarkMode();
     getElement("progressbar").addEventListener('click', toggleDarkMode);
-
-    setTimeout(() => {
-        MathJax.Hub.Typeset();
-    }, 3000);
 
     document.addEventListener("keypress", function(event) {
         if (event.keyCode === 13) {
@@ -78,6 +75,11 @@ function updateDarkMode() {
 
 
 async function showExercise(exerciseid, exercise) {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
+
     setContent("question", exercise.question);
     setContent("method", ``);
 
@@ -90,11 +92,12 @@ async function showExercise(exerciseid, exercise) {
         if (answer === '---') {
             createSeparator();
             separatorCount++;
+        } else if (typeof answer === 'string') {
+            createTextAdditional(answer);
         } else {
             createCheckboxElement(answer.caption, answer.tip || "", isRadio, separatorCount);
         }
     }
-
 
     await ask();
 
@@ -107,13 +110,14 @@ async function showExercise(exerciseid, exercise) {
     for (let i = 0; i < exercise.answers.length; i++) {
         const answer = exercise.answers[i];
         const ele = anseles[i];
-        if (answer === '---') {
+        if (typeof answer === 'string') {
             // Nothing
         } else {
             const isCorrect = ele.children[0].children[0].checked === !!answer.correct;
             ele.classList.add(isCorrect ? "correct" : "incorrect");
             if ((answer.answerType || exercise.answerType) === 'radio') {
                 if (!answer.correct && !ele.children[0].children[0].checked) ele.classList.add("silent");
+                if (!answer.correct) ele.classList.add("noexplain");
             }
             if (answer.score) {
                 possibleScore += answer.score;
@@ -130,7 +134,6 @@ async function showExercise(exerciseid, exercise) {
 
     // Register the score
     registerScore(exerciseid, score / possibleScore * 100);
-
 
     await waitForNext();
 }
@@ -300,6 +303,12 @@ function createSeparator() {
     return sep;
 }
 
+function createTextAdditional(content) {
+    const text = createElement("answers", 'div', content);
+    text.classList.add("additional");
+    return text;
+}
+
 
 
 
@@ -320,7 +329,7 @@ function createElement(parent = undefined, type, htmlContent) {
 function setContent(element, htmlContent) {
     element = getElement(element);
     element.innerHTML = htmlContent;
-    MathJax.Hub.Typeset(element);
+    renderMathInElement(element);
 }
 
 
