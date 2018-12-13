@@ -31,9 +31,8 @@ export let SetIdentifier = "discmath18";
  * - Error-correcting codes
  */
 
-export default {
-    DiagonalizationProof,
-    PropositionalLogicSolve,
-    SetsSolve,
-    //ModularEquivalence,
-};
+export default [
+    { DiagonalizationProof, weight: 0.1 },
+    { PropositionalLogicSolve, weight: 1 },
+    { SetsSolve, weight: 1 },
+];

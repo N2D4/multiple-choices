@@ -20,6 +20,7 @@ export function createProofExercise(random, proof) {
     return createExercise(random, {
         question: proof.question,
         method: proof.method,
+        weight: proof.weight,
         answerType: 'radio',
         answers: proof.proof.map(parray => random.shuffle(parray.map((p, i) => ({
                                                                     caption: p,

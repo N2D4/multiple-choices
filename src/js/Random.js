@@ -92,8 +92,21 @@ export default class Random {
     }
 
 
+    nextOfWeighted(weights) {
+        let rnd = this.nextFloat() * weights.reduce((a, b) => a + b);
+        for (let i = 0; i < weights.length; i++) {
+            rnd -= weights[i];
+            if (rnd < 0) return i;
+        }
+        return weights.length - 1; // rounding errors
+    }
+
     nextElement(array) {
         return array[this.nextInt(array.length)];
+    }
+
+    nextElementWeighted(array, weightFunction) {
+        return array[this.nextOfWeighted(array.map(weightFunction))];
     }
 
     shuffle(array) {

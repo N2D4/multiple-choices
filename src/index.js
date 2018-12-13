@@ -49,14 +49,12 @@ async function main() {
         }
       });
 
-    const curSetEntries = Object.entries(currentSet);
+    const curSetEntries = currentSet;
     while (true) {
-        const nextExercise = random.nextElement(curSetEntries);
-        let nE;
-        do {
-            nE = nextExercise[1](random);
-        } while (nE.answers.length <= 0);
-        await showExercise(nextExercise[0], nE);
+        const nextExerciseR = random.nextElementWeighted(curSetEntries, a => a.weight);
+        const nextExercise = Object.entries(nextExerciseR).find(a => a[0] !== 'weight');
+        const nE = nextExercise[1](random);
+        if (nE.answers.length > 0) await showExercise(nextExercise[0], nE);
     }
 }
 

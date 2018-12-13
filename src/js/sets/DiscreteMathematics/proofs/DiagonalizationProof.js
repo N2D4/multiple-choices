@@ -6,8 +6,8 @@ export default (random) => {
     const set = `\\(\\{0, 1\\}^\\infty\\)`;
 
     return createProofExercise(random, {
-        "question": `Show that the set of infinite bitstrings ${set} is uncountable.`,
-        "proof": [
+        question: `Show that the set of infinite bitstrings ${set} is uncountable.`,
+        proof: [
             [
                 `To show that ${set} is uncountable, we do a proof by contradiction.`,
                 `To show that ${set} is uncountable, we do a direct proof.`,
