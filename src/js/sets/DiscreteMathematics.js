@@ -17,9 +17,6 @@ export let SetIdentifier = "discmath18";
  * - Relations
  * - Uncountable sets
  * 
- * - Greatest common divisors
- * - Modular arithmetic
- * - Multiplicative inverses
  * - CRT
  * - Diffie-Hellman
  * 

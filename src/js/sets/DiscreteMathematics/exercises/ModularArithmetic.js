@@ -1,6 +1,6 @@
 import createExercise from '../../../createExercise.js';
 import { range, removeDeepDuplicates } from '../../../utils.js';
-import { gcd, lcm, eulerPhi, multiplicativeOrder, modularPow, modularInverse, primeFactors } from '../NumberTheory.js';
+import { gcd, lcm, eulerPhi, multiplicativeOrder, modularPow, modularInverse, primeFactors, extendedEuclidTable } from '../NumberTheory.js';
 
 export default (random) => {
     return createExercise(random, {
@@ -22,8 +22,21 @@ export default (random) => {
                         `\\[x = \\textrm{${isGCD ? "gcd" : "lcm"}}(${a}, ${b})\\]`,
                         ...posResults.map(r => ({
                             caption: `\\(${r}\\)`,
-                            tip: isGCD ? `The greatest common divisor of two positive numbers is the largest number such that it divides both numbers. We can calculate the GCD by looking at the prime factorization or using the extended euclidean algorithm.`
-                                       : `The least common multiple of two positive numbers is the smallest number such that it is divided by both numbers. We can calculate the LCM by looking at the prime factorization or using the extended euclidean algorithm.`,
+                            tip: (isGCD ? `The greatest common divisor of two positive numbers is the largest number such that it divides both numbers. We can calculate the GCD by looking at the prime factorization or using the extended euclidean algorithm.`
+                                        : `The least common multiple of two positive numbers is the smallest number such that it is divided by both numbers. We can calculate the LCM by looking at the prime factorization or using the extended euclidean algorithm.`
+                                      ) + `
+                                            \\[
+                                                \\begin{gathered}
+                                                    ${a} = ${primeFactors(a).join(` \\cdot `)} \\\\
+                                                    ${b} = ${primeFactors(b).join(` \\cdot `)} \\\\
+                                                    \\textrm{gcd}(${a}, ${b}) = ${primeFactors(gcd(a, b)).join(` \\cdot `) || "1"} \\\\
+                                                    \\textrm{lcm}(${a}, ${b}) = ${primeFactors(lcm(a, b)).join(` \\cdot `) || "1"}
+                                                \\end{gathered}
+                                            \\]
+                                            \\[
+                                                ${extendedEuclidTable(a, b)}
+                                            \\]
+                                          `,
                             correct: result === r,
                             appearChance: result === r ? 1 : 5 / posResults.length,
                             score: result === r,
@@ -41,7 +54,7 @@ export default (random) => {
                     const posResults = [...range(m)];
                     removeDeepDuplicates(posResults.sort((a, b) => a - b));
                     const phim = eulerPhi(m);
-                    const multord = multiplicativeOrder(a, m);
+                    const multord = multiplicativeOrder(a % m, m);
                     function ezCalc(a, b, m) {
                         let k = 1;
                         const result = [];
@@ -72,10 +85,10 @@ export default (random) => {
                                             R_{${m}}(${a}^{${b}})
                                             &= R_{${m}}(R_{${m}}(${a})^{${b}}) \\\\
                                             &= R_{${m}}(${a % m}^{${b}})
-                                            ${a % m === 0 ? ` \\\\ &= R_{${m}}(0) \\\\ &= 0` : ``}
+                                            ${a % m <= 1 ? ` \\\\ &= R_{${m}}(${a % m}) \\\\ &= ${a % m}` : ``}
                                         \\end{aligned}
                                     \\]
-                                 ` + (a % m === 0 ? `` : `
+                                 ` + (a % m <= 1 ? `` : `
                                     Since \\(\\varphi(${m}) = ${phim}\\) and therefore \\(${a % m}^{${phim}} \\equiv_{${m}} 1\\):
                                     \\[
                                         \\begin{aligned}
@@ -83,10 +96,11 @@ export default (random) => {
                                             &= R_{${m}}(${a % m}^{${b - b % phim}} \\cdot ${a % m}^{${b % phim}}) \\\\
                                             &= R_{${m}}((${a % m}^{${phim}})^{${Math.floor(b / phim)}} \\cdot ${a % m}^{${b % phim}}) \\\\
                                             &= R_{${m}}(1^{${Math.floor(b / phim)}} \\cdot ${a % m}^{${b % phim}}) \\\\
+                                            &= R_{${m}}(1 \\cdot ${a % m}^{${b % phim}}) \\\\
                                             &= ${ezCalc(a % m, b % phim, m)}
                                         \\end{aligned}
                                     \\]
-                                    ${multord < phim ? `Note: Knowing that \\( ${a}^{${multord}} \\equiv_{${m}} 1\\) (we notice that \\(${multord}\\) is the multiplicative order of \\(b\\)), we can find a solution even faster.` : ``}
+                                    ${multord < phim ? `Note: Knowing that \\( ${a % m}^{${multord}} \\equiv_{${m}} 1\\) (we notice that \\(${multord}\\) is the multiplicative order of \\(b\\)), we can find a solution even faster.` : ``}
                                  `),
                             correct: result === r,
                             appearChance: result === r ? 1 : 5 / posResults.length,
@@ -95,8 +109,8 @@ export default (random) => {
                     ];
                 }
                 case 3: {                                   // Modular inverse
-                    const a1 = random.nextInt(2, 500);
-                    const b1 = random.nextInt(2, 500);
+                    const a1 = random.nextInt(2, 100);
+                    const b1 = random.nextInt(2, 100);
                     const abgcd = gcd(a1, b1);
                     const a = random.chance(4/5) ? a1 / abgcd : a1;
                     const m = random.chance(4/5) ? b1 / abgcd : b1;
@@ -120,7 +134,12 @@ export default (random) => {
                         },
                         ...posResults.map(r => ({
                             caption: `\\(${r}\\)`,
-                            tip: `Using the euclidean algorithm, we find that \\(${a}u + ${m}v = 1\\) for \\(u = ${result}\\). \\(x = u\\) follows trivially from Lemma 4.17. The unique number \\(x\\) is also called the modular inverse of \\(${a}\\) modulo \\(${m}\\) and exists if and only if \\(\\textrm{gcd}(a, m) = 1\\).`,
+                            tip: `
+                                    Using the euclidean algorithm, we find that \\(${a}u + ${m}v = 1\\) for \\(u = ${result}\\). \\(x = u\\) follows trivially from Lemma 4.17. The unique number \\(x\\) is also called the modular inverse of \\(${a}\\) modulo \\(${m}\\) and exists if and only if \\(\\textrm{gcd}(a, m) = 1\\).
+                                    \\[
+                                        ${extendedEuclidTable(a, m)}
+                                    \\]
+                                 `,
                             correct: result === r,
                             appearChance: result === r ? 1 : 4 / posResults.length,
                             score: result === r,

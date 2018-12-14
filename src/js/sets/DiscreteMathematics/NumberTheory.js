@@ -1,7 +1,18 @@
 export function extendedEuclid(a, b) {
-    if (b === 0) return [a, 1, 0];
-    const [d, s, t] = extendedEuclid(b, a % b);
-    return [d, t, s - Math.floor(a / b) * t];
+    if (b === 0) return [a, 1, 0, [a, b, 1, 0, undefined]];
+    let [d, u, v, arr] = extendedEuclid(b, a % b);
+    [u, v] = [v, u - Math.floor(a / b) * v];
+    return [d, u, v, [a, b, u, v, arr]];
+}
+
+export function extendedEuclidTable(a, b) {
+    const rows = [` a & b & u & v \\\\ \\hline `];
+    let arr = extendedEuclid(a, b)[3];
+    while (arr !== undefined) {
+        rows.push(` ${arr[0]} & ${arr[1]} & ${arr[2]} & ${arr[3]} \\\\ `);
+        arr = arr[4];
+    }
+    return `\\begin{array}{cc | cc} ${rows.join(` `)} \\end{array}`;
 }
 
 export function gcd(a, b) {
