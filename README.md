@@ -1,6 +1,8 @@
 # multiple-choices
 A simple web app for displaying multiple choice questions.
 
+[Live Demo](https://n.ethz.ch/~wohlwenk/kapitel6/)
+
 ## Installation/Usage
 This is a vanilla HTML/CSS/JS web app, meaning you can literally just double-click `src/index.html` (all the way back to 2005!)  - at least in theory, in practice, most browsers block ES6 modules on `file://`, so you'll either have to disable X-origin restrictions temporarily, or launch a localhost server (eg. with `npx serve` if you have Node.js installed).
 
