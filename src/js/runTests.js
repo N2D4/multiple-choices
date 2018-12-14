@@ -36,7 +36,6 @@ export default function runTests(scale = 1) {
 
 
 
-    // TODO check if simplified formula is actually in CNF/DNF
     runTest(function propositionalSimplify(prog) {
         const atomicCount = Math.round(1 + 6 * prog);
         const atomics = [...range(atomicCount)].map(i => String.fromCharCode(['A'.charCodeAt(0) + i]));

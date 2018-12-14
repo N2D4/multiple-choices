@@ -1,5 +1,5 @@
 # multiple-choices
-A simple web app for displaying multiple choice questions.
+A simple web app which displays multiple choice questions.
 
 [Live Demo](https://n.ethz.ch/~wohlwenk/kapitel6/)
 
