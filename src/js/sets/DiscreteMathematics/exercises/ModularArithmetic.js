@@ -1,22 +1,26 @@
 import createExercise from '../../../createExercise.js';
 import { range, removeDeepDuplicates } from '../../../utils.js';
-import { gcd, lcm, eulerPhi, multiplicativeOrder, modularPow, modularInverse, primeFactors, extendedEuclidTable } from '../NumberTheory.js';
+import { gcd, lcm, eulerPhi, multiplicativeOrder, modularPow, modularInverse, primeFactors, extendedEuclidTable, extendedEuclid } from '../NumberTheory.js';
 
 export default (random) => {
     return createExercise(random, {
         question: `
                     Find the value of \\(x\\).<br>
-                    Note: All of these can be solved without a calculator.
+                    Note: All of these can be solved without a calculator, without brute forcing the given choices.
                   `,
         answerType: 'radio',
-        answers: [...range(5)].map(a => {
-            switch (random.nextInt(4)) {
+        answers: [...range(3)].map(a => {
+            switch (random.nextInt(3)) {
                 case 0: {                                   // GCD/LCD
-                    const a = random.nextInt(2, 50);
-                    const b = random.nextInt(2, 50);
+                    const a = random.nextInt(2, 200);
+                    const b = random.nextInt(2, 200);
                     const isGCD = random.chance(1/2);
                     const result = isGCD ? gcd(a, b) : lcm(a, b);
                     const posResults = [a, b, 1, a*b, gcd(a, b), lcm(a, b), 2 * result, Math.round(result / 2), 3 * result, Math.round(result / 3)];
+                    for (let i = 0; i < 2; i++) {
+                        posResults.push(primeFactors(a).filter(a => random.chance(1/2)).reduce((a, b) => a * b, 1));
+                        posResults.push(primeFactors(b).filter(a => random.chance(1/2)).reduce((a, b) => a * b, 1));
+                    }
                     removeDeepDuplicates(posResults.sort((a, b) => a - b));
                     return [
                         `\\[x = \\textrm{${isGCD ? "gcd" : "lcm"}}(${a}, ${b})\\]`,
@@ -38,12 +42,12 @@ export default (random) => {
                                             \\]
                                           `,
                             correct: result === r,
-                            appearChance: result === r ? 1 : 5 / posResults.length,
+                            appearChance: result === r ? 1 : 6 / posResults.length,
                             score: result === r,
                         }))
                     ];
                 }
-                case 1: case 2: {                           // Remainders
+                case 1: {                           // Remainders
                     let m = random.nextInt(3, 18);
                     while (!random.chance(1/primeFactors(m).length)) m--;
                     let a = random.nextInt(m, 300);
@@ -61,10 +65,10 @@ export default (random) => {
                         while (b > 3) {
                             if (b % 2 === 0) {
                                 b /= 2;
-                                result.push(`R_{${m}}(${k} \\cdot R_{${m}}(${a}^2)^{${b}})`);
+                                result.push(`R_{${m}}(${k} \\cdot (${a}^2)^{${b}})`);
                                 a = (a*a) % m;
                             } else {
-                                result.push(`R_{${m}}(R_{${m}}(${k} \\cdot ${a}) \\cdot ${a}^{${b - 1}})`);
+                                result.push(`R_{${m}}((${k} \\cdot ${a}) \\cdot ${a}^{${b - 1}})`);
                                 k = (k*a) % m;
                                 b -= 1;
                             }
@@ -103,18 +107,18 @@ export default (random) => {
                                     ${multord < phim ? `Note: Knowing that \\( ${a % m}^{${multord}} \\equiv_{${m}} 1\\) (we notice that \\(${multord}\\) is the multiplicative order of \\(b\\)), we can find a solution even faster.` : ``}
                                  `),
                             correct: result === r,
-                            appearChance: result === r ? 1 : 5 / posResults.length,
+                            appearChance: result === r ? 1 : 6 / posResults.length,
                             score: result === r,
                         }))
                     ];
                 }
-                case 3: {                                   // Modular inverse
+                case 2: {                                   // Modular inverse
                     const a1 = random.nextInt(2, 100);
                     const b1 = random.nextInt(2, 100);
-                    const abgcd = gcd(a1, b1);
-                    const a = random.chance(4/5) ? a1 / abgcd : a1;
-                    const m = random.chance(4/5) ? b1 / abgcd : b1;
+                    const a = random.chance(4/5) ? a1 / gcd(a1, b1) : a1;
+                    const m = random.chance(4/5) ? b1 / gcd(a, b1) : b1;
 
+                    const [, u, v,] = extendedEuclid(a, m);
                     const result = gcd(a, m) === 1 ? modularInverse(a, m) : undefined;
                     const posResults = [...[...range(20)].map(_ => random.nextInt(0, m))];
                     if (result !== undefined) posResults.push(result);
@@ -135,13 +139,13 @@ export default (random) => {
                         ...posResults.map(r => ({
                             caption: `\\(${r}\\)`,
                             tip: `
-                                    Using the euclidean algorithm, we find that \\(${a}u + ${m}v = 1\\) for \\(u = ${result}\\). \\(x = u\\) follows trivially from Lemma 4.17. The unique number \\(x\\) is also called the modular inverse of \\(${a}\\) modulo \\(${m}\\) and exists if and only if \\(\\textrm{gcd}(a, m) = 1\\).
+                                    Using the euclidean algorithm, we find that \\( ${a} \\cdot u + ${m} \\cdot v = 1 \\) with \\( u = ${u}, v = ${v} \\). We get \\(${a} \\cdot u + ${m} \\cdot v \\equiv_{${m}} ${a} \\cdot u \\equiv_{${m}} 1\\), therefore \\(x \\equiv_{${m}} ${u}\\). The unique number \\(x\\) is also called the modular inverse of \\(${a}\\) modulo \\(${m}\\) and exists if and only if \\(\\textrm{gcd}(a, m) = 1\\).
                                     \\[
                                         ${extendedEuclidTable(a, m)}
                                     \\]
                                  `,
                             correct: result === r,
-                            appearChance: result === r ? 1 : 4 / posResults.length,
+                            appearChance: result === r ? 1 : 5 / posResults.length,
                             score: result === r,
                         })),
                     ];
