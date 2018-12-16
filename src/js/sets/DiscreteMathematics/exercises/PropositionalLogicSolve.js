@@ -188,6 +188,7 @@ export default (random) => {
                 appearChance: 1/4,
                 score: 0.5,
             },
+            '---',
             ...similarFormulas.map(similar => ({
                 caption: `\\(F \\vDash ${similar}\\)`,
                 tip: `A formula is a logical consequence of another if and only if it evaluates to true for any interpretation for which the other formula evaluates to true. No requirement for the right-hand side is given if the left-hand side evaluates to false for a given interpretation.`,
@@ -202,6 +203,7 @@ export default (random) => {
                 appearChance: 1/6,
                 score: 0.25,
             },
+            '---',
             {
                 caption: `\\(${Formula.unsatisfiable()} \\vDash F\\)`,
                 tip: `Any formula is a logical consequence of every unsatisfiable formula.`,

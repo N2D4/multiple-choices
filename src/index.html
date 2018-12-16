@@ -31,14 +31,14 @@
     </div>
 
     <div id="container">
-        <noscript>You don't seem to have JavaScript enabled. Please enable JavaScript, then try again.</noscript>
+        <noscript>You don't seem to have JavaScript enabled. Please enable JavaScript, then try again. <span class="remark">(If you're on a slow internet connection, your browser might've automatically disabled JavaScript.)</span></noscript>
         <div id="question">
+            <span id="pagenotloading" class="remark"></i>
             <script defer>setTimeout(function() {
                 try {
-                    document.getElementById("pagenotloading").innerHTML = '(if the page is not loading, please update your browser and/or <a href="mailto:wohlwenk@student.ethz.ch" style="color: inherit;">report an error</a>!)';
+                    document.getElementById("pagenotloading").innerHTML = '(if the page is not loading, please reload the page, update your browser and/or <a href="mailto:wohlwenk@student.ethz.ch" style="color: inherit;">report an error</a>!)';
                 } catch (err) {}
             }, 3000);</script>
-            <i id="pagenotloading" style="font-size: 60%;"></i>
         </div>
         <div id="method">
             
