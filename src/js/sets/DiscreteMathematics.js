@@ -5,6 +5,8 @@ import ChineseRemainderTheorem from './DiscreteMathematics/exercises/ChineseRema
 import GCDLCD from './DiscreteMathematics/exercises/GCDLCD.js';
 import Remainders from './DiscreteMathematics/exercises/Remainders.js';
 import ModularInverse from './DiscreteMathematics/exercises/ModularInverse.js';
+import EulerPhi from './DiscreteMathematics/exercises/EulerPhi.js';
+
 
 
 export let SetName = "Discrete Mathematics";
@@ -36,5 +38,6 @@ export default [
     { GCDLCD, weight: 0.5 },
     { Remainders, weight: 1 },
     { ModularInverse, weight: 0.5 },
-    { ChineseRemainderTheorem, weight: 0.5 }
+    { ChineseRemainderTheorem, weight: 1 },
+    { EulerPhi, weight: 0.5 },
 ];

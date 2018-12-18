@@ -36,7 +36,7 @@ export default (random) => {
 
 
     return createExercise(random, {
-        question: `\\[x = R_{${m}}(${a}^{${b}})\\]`,
+        question: `Calculate: \\[R_{${m}}(${a}^{${b}})\\]`,
         answerType: 'radio',
         answers: [
             ...posResults.map(r => ({

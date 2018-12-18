@@ -16,7 +16,7 @@ export default (random) => {
 
 
     return createExercise(random, {
-        question: `\\[x = \\textrm{${isGCD ? "gcd" : "lcm"}}(${a}, ${b})\\]`,
+        question: `Calculate: \\[\\textrm{${isGCD ? "gcd" : "lcm"}}(${a}, ${b})\\]`,
         answerType: 'radio',
         answers: [
             ...posResults.map(r => ({

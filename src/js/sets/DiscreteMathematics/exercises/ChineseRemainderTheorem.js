@@ -40,7 +40,7 @@ export default (random) => {
         answerType: 'radio',
         answers: [
             ...posX.map(r => ({
-                caption: `\\(x = ${r}\\)`,
+                caption: `\\(${r}\\)`,
                 tip: r !== x ? `` : `
                                         To solve for \\(x\\), we first need to find \\(M_i\\) for all \\(i\\).
                                         \\[

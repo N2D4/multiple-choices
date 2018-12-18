@@ -58,7 +58,8 @@ export function removeDeepDuplicates(arr) {
 
 export function spreadNumbers(random, ...nums) {
     const arr = [];
-    for (const num of nums) {
+    for (let num of nums) {
+        num = Math.round(num);
         arr.push(num);
         for (let i = 0; i < 3; i++) {
             arr.push(random.binomialInt(num - 3, num, num + 4));

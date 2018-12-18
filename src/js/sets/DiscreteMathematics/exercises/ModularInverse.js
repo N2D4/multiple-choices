@@ -16,7 +16,7 @@ export default (random) => {
 
 
     return createExercise(random, {
-        question: `
+        question: `Solve for \\(x\\):
                     \\[
                         \\begin{gathered}
                             ${a} \\cdot x \\equiv_{${m}} 1, \\\\
