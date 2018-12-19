@@ -161,7 +161,7 @@ export default (random) => {
                     \\]
                     ${graphNodes !== undefined ? `
                         Graph for generator \\(${toString(cgen)}\\):
-                        <div style="width: 300px; height: 300px; margin-left: auto; margin-right: auto; position: relative;">
+                        <div style="width: 300px; height: 300px; margin-left: auto; margin-right: auto; position: relative; overflow: hidden;">
                             <svg width="100%" height="100%" viewBox="0 0 100 100">
                                 <defs>
                                     <marker id="triangle" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="strokeWidth" markerWidth="5" markerHeight="5" orient="auto">

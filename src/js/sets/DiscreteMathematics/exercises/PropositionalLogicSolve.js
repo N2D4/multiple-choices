@@ -7,7 +7,10 @@ export default (random) => {
     const atomicCount = random.binomialInt(2, 3, 5);
     const atomics = [...charRange(atomicCount)];
 
-    const formula = new Formula(random, atomics);
+    let formula = undefined;
+    do {
+        formula = new Formula(random, atomics);
+    } while ((formula.isTautology() || formula.isUnsatisfiable()) && random.chance(2/3));
     const freeVariables = formula.freeVariables();
     const freeVariableCount = freeVariables.size;
     const showTruthTable = freeVariableCount >= 2 && freeVariableCount <= 4 && random.chance(1/3);

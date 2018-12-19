@@ -31,7 +31,7 @@ export default (random) => {
                                         \\textrm{gcd}(${a}, ${b}) = ${primeFactors(gcd(a, b)).join(` \\cdot `) || "1"} \\\\
                                         \\begin{aligned}
                                             \\textrm{lcm}(${a}, ${b}) &= ${primeFactors(lcm(a, b)).join(` \\cdot `) || "1"} \\\\
-                                                                      &= ${a} \cdot ${b} / ${gcd(a, b)}
+                                                                      &= ${a} \\cdot ${b} / ${gcd(a, b)}
                                         \\end{aligned}
                                     \\end{gathered}
                                 \\]
