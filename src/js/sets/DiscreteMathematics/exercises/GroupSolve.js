@@ -135,7 +135,7 @@ export default (random) => {
             const y1 = (1 - p) * y(angle) + p * y(newAngle);
             const x2 = p * x(angle) + (1 - p) * x(newAngle);
             const y2 = p * y(angle) + (1 - p) * y(newAngle);
-            graphEdges.push(`<path d="M${x1},${y1} L${x2},${y2}" style="stroke: black; stroke-width: 0.5; marker-end: url(#triangle);" />`);
+            graphEdges.push(`<path d="M${x1},${y1} L${x2},${y2}" class="strokeDark" style="stroke-width: 0.5; marker-end: url(#triangle);" />`);
             lcur = op(lcur, cgen);
         }
     }
@@ -165,7 +165,7 @@ export default (random) => {
                             <svg width="100%" height="100%" viewBox="0 0 100 100">
                                 <defs>
                                     <marker id="triangle" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="strokeWidth" markerWidth="5" markerHeight="5" orient="auto">
-                                        <path d="M0,0 L10,5 L0,10 z" style="fill:black;" />
+                                        <path d="M0,0 L10,5 L0,10 z" class="strokeDark"/>
                                     </marker>
                                 </defs>
                                 ${graphEdges.join(` `)}
