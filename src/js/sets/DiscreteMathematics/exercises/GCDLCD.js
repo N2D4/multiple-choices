@@ -28,10 +28,14 @@ export default (random) => {
                                     \\begin{gathered}
                                         ${a} = ${primeFactors(a).join(` \\cdot `)} \\\\
                                         ${b} = ${primeFactors(b).join(` \\cdot `)} \\\\
-                                        \\textrm{gcd}(${a}, ${b}) = ${primeFactors(gcd(a, b)).join(` \\cdot `) || "1"} \\\\
+                                        \\begin{aligned}
+                                            \\textrm{gcd}(${a}, ${b}) &= ${primeFactors(gcd(a, b)).join(` \\cdot `) || "1"} \\\\
+                                            &= ${gcd(a, b)}
+                                        \\end{aligned} \\\\
                                         \\begin{aligned}
                                             \\textrm{lcm}(${a}, ${b}) &= ${primeFactors(lcm(a, b)).join(` \\cdot `) || "1"} \\\\
-                                                                      &= ${a} \\cdot ${b} / ${gcd(a, b)}
+                                                                      &= \\frac{${a} \\cdot ${b}}{\\textrm{gcd}(${a}, ${b})} \\\\
+                                                                      &= ${lcd(a, b)}
                                         \\end{aligned}
                                     \\end{gathered}
                                 \\]
