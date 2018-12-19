@@ -63,7 +63,7 @@ export default (random) => {
                                 &= ${ezCalc(a % m, b % phim, m)}
                             \\end{aligned}
                         \\]
-                        ${multord < phim ? `Note: Knowing that \\( ${a % m}^{${multord}} \\equiv_{${m}} 1\\) (we notice that \\(${multord}\\) is the multiplicative order of \\(b\\)), we can find a solution even faster.` : ``}
+                        ${multord < phim ? `Note: Knowing that \\( ${a % m}^{${multord}} \\equiv_{${m}} 1\\) (we notice that \\(${multord}\\) is the multiplicative order of \\(${a}\\) modulo \\(${m}\\)), we can find a solution even faster.` : ``}
                      `),
                 correct: result === r,
                 appearChance: result === r ? 1 : 6 / posResults.length,

@@ -6,6 +6,7 @@ import GCDLCD from './DiscreteMathematics/exercises/GCDLCD.js';
 import Remainders from './DiscreteMathematics/exercises/Remainders.js';
 import ModularInverse from './DiscreteMathematics/exercises/ModularInverse.js';
 import EulerPhi from './DiscreteMathematics/exercises/EulerPhi.js';
+import GroupSolve from './DiscreteMathematics/exercises/GroupSolve.js';
 
 
 
@@ -39,5 +40,6 @@ export default [
     { Remainders, weight: 1 },
     { ModularInverse, weight: 0.5 },
     { ChineseRemainderTheorem, weight: 1 },
-    { EulerPhi, weight: 0.5 },
+    { EulerPhi, weight: 0.25 },
+    { GroupSolve, weight: 1.5 },
 ];

@@ -1,3 +1,5 @@
+import { removeDeepDuplicates } from "../../utils.js";
+
 export function extendedEuclid(a, b) {
     if (b === 0) return [a, 1, 0, [a, b, 1, 0, undefined]];
     let [d, u, v, arr] = extendedEuclid(b, a % b);
@@ -27,10 +29,14 @@ export function modularInverse(a, m) {
     return ((extendedEuclid(a, m)[1] % m) + m) % m;
 }
 
+export function customPow(a, b, op, e) {
+    if (b === 0) return e;
+    else if (b % 2 === 1) return op(a, customPow(a, b-1, op, e));
+    else return (a => op(a, a))(customPow(a, b/2, op, e));
+}
+
 export function modularPow(a, b, m) {
-    if (b === 0) return 1;
-    else if (b % 2 === 1) return (a * modularPow(a, b-1, m)) % m;
-    else return Math.pow(modularPow(a, b/2, m), 2) % m;
+    return customPow(a, b, (a, b) => (a * b) % m, 1);
 }
 
 export function primeFactors(num) {
@@ -44,6 +50,10 @@ export function primeFactors(num) {
     }
     if (num > 1) result.push(num);
     return result;
+}
+
+export function divisors(num) {
+    return removeDeepDuplicates(primeFactors(num).reduce((a, b) => [...a, ...a.map(a => a * b)], [1])).sort((a, b) => a - b);
 }
 
 export function eulerPhi(m) {

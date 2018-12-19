@@ -6,7 +6,7 @@ export function createArray(length, value = undefined) {
     return arr;
 }
 
-export function* range(min = 0, max) {
+export function* xrange(min = 0, max) {
     if (max === undefined) {
         max = min;
         min = 0;
@@ -17,14 +17,22 @@ export function* range(min = 0, max) {
     }
 }
 
-export function* charRange(first = 'A', count) {
+export function range(min = 0, max) {
+    return [...xrange(min, max)];
+}
+
+export function* xcharRange(first = 'A', count) {
     if (count === undefined) {
         count = first;
         first = 'A';
     }
-    for (const i of range(count)) {
+    for (const i of xrange(count)) {
         yield String.fromCharCode([first.charCodeAt(0) + i]);
     }
+}
+
+export function charRange(first = 'A', count) {
+    return [...xcharRange(first, count)];
 }
 
 export function deepEquals(a, b) {
@@ -72,5 +80,9 @@ export function spreadNumbers(random, ...nums) {
 
 export function spreadNumbersModulo(random, mod, ...nums) {
     return removeDeepDuplicates(spreadNumbers(random, ...nums).map(a => ((a % mod) + mod) % mod)).sort((a, b) => a - b);
+}
+
+export function cartesian(...arrs) {
+    return arrs.reduce((a, b) => a.map(c => b.map(d => [...c, d])).reduce((a, b) => [...a, ...b], []), [[]]);
 }
 

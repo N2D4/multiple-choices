@@ -111,6 +111,10 @@ export default class Random {
         return array[this.nextOfWeighted(array.map(weightFunction))];
     }
 
+    nextElements(array, count) {
+        return this.shuffle([...array]).slice(count);
+    }
+
     shuffle(array) {
         for (let i = 0; i < array.length - 1; i++) {
             const j = this.nextInt(i + 1, array.length);

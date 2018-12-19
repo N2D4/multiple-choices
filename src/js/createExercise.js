@@ -24,7 +24,8 @@ export function createProofExercise(random, proof) {
         method: proof.method,
         weight: proof.weight,
         answerType: 'radio',
-        answers: proof.proof.map(parray => random.shuffle(parray.map((p, i) => ({
+        answers: proof.proof.map(parray => typeof parray === 'string' ? parray
+                                         : random.shuffle(parray.map((p, i) => ({
                                                                     caption: p,
                                                                     correct: i === 0,
                                                                     score: i === 0 ? 1 : 0,
