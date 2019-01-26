@@ -41,5 +41,5 @@ export default [
     { ModularInverse, weight: 0.5 },
     { ChineseRemainderTheorem, weight: 1 },
     { EulerPhi, weight: 0.25 },
-    { GroupSolve, weight: 1.5 },
+    { GroupSolve, weight: 1 },
 ];
