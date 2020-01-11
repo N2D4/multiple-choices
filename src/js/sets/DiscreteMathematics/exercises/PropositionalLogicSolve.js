@@ -178,8 +178,8 @@ export default (random) => {
                 score: 1,
             })),
             {
-                caption: `\\(F \\vDash F \\land Y\\) for all formulas \\(Y\\)`,
-                tip: `Any conjunction (but not necessarily disjunction!) is a logical consequence of its operands.`,
+                caption: `\\(F \\vDash F \\lor Y\\) for all formulas \\(Y\\)`,
+                tip: `Any disjunction (but not necessarily conjunction!) is a logical consequence of its operands.`,
                 correct: true,
                 appearChance: 1/6,
                 score: 0.25,
@@ -200,8 +200,8 @@ export default (random) => {
                 score: 1,
             })),
             {
-                caption: `\\(F \\lor Y \\vDash F\\) for all formulas \\(Y\\)`,
-                tip: `Any operand of a disjunction (but not necessarily conjunction!) is a logical consequence of the entire disjunction.`,
+                caption: `\\(F \\land Y \\vDash F\\) for all formulas \\(Y\\)`,
+                tip: `Any operand of a conjunction (but not necessarily disjunction!) is a logical consequence of the entire disjunction.`,
                 correct: true,
                 appearChance: 1/6,
                 score: 0.25,

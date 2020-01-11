@@ -35,7 +35,7 @@ export default (random) => {
                                         \\begin{aligned}
                                             \\textrm{lcm}(${a}, ${b}) &= ${primeFactors(lcm(a, b)).join(` \\cdot `) || "1"} \\\\
                                                                       &= \\frac{${a} \\cdot ${b}}{\\textrm{gcd}(${a}, ${b})} \\\\
-                                                                      &= ${lcd(a, b)}
+                                                                      &= ${lcm(a, b)}
                                         \\end{aligned}
                                     \\end{gathered}
                                 \\]

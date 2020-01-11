@@ -27,7 +27,7 @@ export default (random) => {
             break;
         }
         case 1: {
-            const modulo = random.nextInt(3, 16);
+            let modulo = random.nextInt(3, 16);
             setRender = `\\mathbb{Z}_{${modulo}}^*`;
             operationRender = ` \\otimes `;
             plausibleElements = range(modulo);
@@ -37,7 +37,8 @@ export default (random) => {
             break;
         }
         case 2: case 3: {
-            const gf = random.nextInt(2, 5);
+            let gf = random.nextInt(2, 5);
+            if (gf === 4) gf = 5;
             const polydeg = gf <= 2 ? random.nextInt(2, 4) : random.binomialInt(1, 1.7, 3);
             const polymod = [1, ...range(polydeg).map(i => random.nextInt(0, gf))];
             const varname = random.nextElement(["x", "y", "z"]);
@@ -78,7 +79,7 @@ export default (random) => {
                 }
                 return G.find(a => deepEquals(ad, a));
             };
-            G = G.filter(a => plausibleElements.some(b => op(a, b) === e));
+            G = G.filter(a => plausibleElements.some(b => deepEquals(op(a, b), e)));
             if (plausibleElements.length <= G.length) plausibleElements = [];
             break;
         }
@@ -145,7 +146,7 @@ export default (random) => {
 
     return createExercise(random, {
         question: `
-                    Consider the following group:
+                    Consider the following monoid:
                     \\[
                         G = \\langle ${setRender}, ${operationRender} \\rangle
                     \\]
@@ -179,7 +180,7 @@ export default (random) => {
             ...elePos.map(a => ({
                 caption: `\\(${toString(a)} \\in ${setRender}\\)`,
                 tip: ``,
-                correct: G.some(b => b === a),
+                correct: G.some(b => deepEquals(b, a)),
                 appearChance: plausibleElements.length <= 0 ? 0 : 3 / elePos.length,
                 score: 1,
             })),
@@ -206,8 +207,8 @@ export default (random) => {
                     tip: `
                             An element's inverse is the (unique) element \\(a^{-1} = a^{\\textrm{ord}(a) - 1}\\) such that \\(a ${operationRender} a^{-1} = e\\).
                          `,
-                    correct: l === inv(a),
-                    appearChance: 2 / G.length,
+                    correct: deepEquals(l, inv(a)),
+                    appearChance: deepEquals(op(inv(a), a), e) ? 2 / G.length : 0,
                     score: 1,
                 }
             }),
@@ -224,7 +225,7 @@ export default (random) => {
                                 \\end{aligned}
                             \\]
                          `,
-                    correct: l === cpow,
+                    correct: deepEquals(l, cpow),
                     appearChance: 2 / (G.length - 2),
                     score: 1,
                 }
