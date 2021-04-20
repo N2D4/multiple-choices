@@ -22,7 +22,6 @@ setStoredItemIfNotPresent(data_init_state, (Math.random() * 4294967296) >>> 0);
 setStoredItemIfNotPresent(data_state, getStoredItem(data_init_state));
 setStoredItemIfNotPresent(data_scores, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 setStoredItemIfNotPresent(data_total_answered, {});
-setStoredItemIfNotPresent("darkmode", matchMedia("(prefers-color-scheme: dark)").matches);
 
 // Initialize Random instance
 const random = new Random(getStoredItem(data_state));
@@ -64,11 +63,11 @@ function toggleDarkMode() {
 
 function updateDarkMode() {
     const html = getElement("html");
-    if (getStoredItem("darkmode")) {
+    if (getStoredItem(data_darkmode) ?? window.matchMedia('(prefers-color-scheme: dark)').matches) {
         console.log("ewwwww, darkmode");
-        html.classList.add("darkmode");
+        html.classList.add(data_darkmode);
     } else {
-        html.classList.remove("darkmode");
+        html.classList.remove(data_darkmode);
     }
 }
 
